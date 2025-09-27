@@ -29,6 +29,7 @@ export const orders = sqliteTable("orders", {
   userId: integer("user_id").references(() => users.id),
   delivery: integer("delivery", { mode: "boolean" }).notNull(),
   createdAt: text("created_at").default("CURRENT_TIMESTAMP"),
+  isCompleted: integer("delivery", { mode: "boolean" }).notNull(),
 });
 
 export const orderItems = sqliteTable("order_items", {

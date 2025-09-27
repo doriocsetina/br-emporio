@@ -26,3 +26,11 @@ npm run build
 You can preview the production build with `npm run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+
+
+
+- aggiungere blocco orario automatico giovedì alle 9 e
+- aggiungere sblocco manuale 
+- aggiungere flag "pagato"
+- aggiungere inserimento manuale totale (da poi aggiungere al db) cambiare il db in stima + totale vero
+- aggiungere numero di telefono

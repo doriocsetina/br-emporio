@@ -1,6 +1,6 @@
-import { redirect } from "@sveltejs/kit";
+// src/routes/admin/+page.server.js
+import { redirect } from '@sveltejs/kit';
 
-export const load = ({ locals }) => {
-  console.log("Locals:", locals);
-  return {};
-};
+export function load() {
+  throw redirect(307, '/admin/dashboard');
+}
