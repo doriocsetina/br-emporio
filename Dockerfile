@@ -6,7 +6,8 @@ COPY package*.json ./
 RUN npm install
 
 # Allow build-time database URL argument
-RUN npx drizzle-kit generate
+ARG DATABASE_URL=file:/tmp/build.db
+ENV DATABASE_URL=${DATABASE_URL}
 
 COPY . .
 RUN npm run build
