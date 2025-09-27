@@ -1,8 +1,7 @@
-import type { PageServerLoad } from './$types';
+import type { Actions, PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
 import { users, orders, orderItems, products } from '$lib/server/db/schema';
-import { and, eq } from 'drizzle-orm';
-import { sql } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 
 function weekKeyToLabel(weekKey: string) {
 	// weekKey is in the form YYYY-WW
@@ -31,7 +30,9 @@ export const load: PageServerLoad = async ({ url }) => {
 		email: string | null;
 		delivery: boolean;
 		address: string | null;
-		total: number;
+		total: number; // computed from items
+		isCompleted?: boolean;
+		paidTotal?: number | null;
 		items: Array<{ productName: string; quantity: number; price: number }>;
 	}> = [];
 
@@ -42,6 +43,8 @@ export const load: PageServerLoad = async ({ url }) => {
 				orderId: orders.id,
 				createdAt: orders.createdAt,
 				delivery: orders.delivery,
+				isCompleted: orders.isCompleted,
+				paidTotal: orders.total,
 				userName: users.name,
 				userSurname: users.surname,
 				email: users.email,
@@ -74,6 +77,8 @@ export const load: PageServerLoad = async ({ url }) => {
 					delivery: !!r.delivery,
 					address: r.address ?? null,
 					total: 0,
+					isCompleted: !!r.isCompleted,
+					paidTotal: r.paidTotal ?? null,
 					items: []
 				};
 				map.set(r.orderId, o);
@@ -91,4 +96,24 @@ export const load: PageServerLoad = async ({ url }) => {
 		selectedWeek,
 		orders: ordersData
 	};
+};
+
+export const actions: Actions = {
+  markPaid: async ({ request }) => {
+    const form = await request.formData();
+    const id = Number(form.get('id'));
+    const totalStr = form.get('total');
+    const total = totalStr != null ? parseFloat(String(totalStr).replace(',', '.')) : NaN;
+
+    if (!id || isNaN(total) || total <= 0) {
+      return { error: 'Totale non valido' } as const;
+    }
+
+    await db
+      .update(orders)
+      .set({ total, isCompleted: true })
+      .where(eq(orders.id, id));
+
+    return { success: true } as const;
+  }
 };

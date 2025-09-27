@@ -3,7 +3,7 @@
 	<div class="my-12">
 		<h1 class="text-5xl font-bold text-indigo-600">Benvenut all'Emporio Bread & Roses!</h1>
 		<p class="mt-4 max-w-2xl text-lg text-gray-700">
-			benvenute all'emporio del bread facciamo un sacco di cose swag odiamo gli sbirri e il captitale 
+			benvenute all'emporio del bread facciamo un sacco di cose swag odiamo il capitale e le multinazionali 
             e facciamo lo stile a palate e qui vendiamo le cose senza dar soldi alla grande distribuzione
 		</p>
 		

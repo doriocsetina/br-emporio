@@ -14,6 +14,7 @@ export const products = sqliteTable("products", {
   description: text("description"),
   price: real("price").notNull(),
   media: text("media"),
+  visible: integer("visible", { mode: "boolean" }).notNull().default(true),
 });
 
 export const users = sqliteTable("users", {
@@ -21,6 +22,7 @@ export const users = sqliteTable("users", {
   name: text("name").notNull(),
   surname: text("surname").notNull(),
   email: text("email").notNull().unique(),
+  phone: text("phone"),
   address: text("address"),
 });
 
@@ -30,6 +32,7 @@ export const orders = sqliteTable("orders", {
   delivery: integer("delivery", { mode: "boolean" }).notNull(),
   createdAt: text("created_at").default("CURRENT_TIMESTAMP"),
   isCompleted: integer("delivery", { mode: "boolean" }).notNull(),
+  total: real("total"),
 });
 
 export const orderItems = sqliteTable("order_items", {

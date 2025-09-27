@@ -16,7 +16,32 @@ function createCartStore() {
   if (browser) {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) initial = JSON.parse(raw);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) {
+          // sanitize persisted entries
+          const seen = new Map<number, CartItem>();
+          for (const it of parsed) {
+            if (!it || typeof it !== 'object') continue;
+            const { id, name, price, media, quantity } = it as Partial<CartItem>;
+            if (
+              typeof id === 'number' &&
+              typeof name === 'string' &&
+              typeof price === 'number'
+            ) {
+              const qty = Math.max(1, Number.isFinite(quantity as number) ? (quantity as number) : 1);
+              const existing = seen.get(id);
+              if (existing) {
+                existing.quantity += qty;
+                seen.set(id, existing);
+              } else {
+                seen.set(id, { id, name, price, media: media ?? null, quantity: qty });
+              }
+            }
+          }
+          initial = Array.from(seen.values());
+        }
+      }
     } catch {}
   }
 

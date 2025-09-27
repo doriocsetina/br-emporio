@@ -1,0 +1,8 @@
+{
+  "ordersOpen": true,
+  "autoClose": {
+    "enabled": false,
+    "weekday": null,
+    "time": null
+  }
+}

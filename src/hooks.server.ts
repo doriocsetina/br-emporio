@@ -1,4 +1,5 @@
 import { validateSessionToken, sessionCookieName } from "$lib/server/auth";
+import { applyAutoCloseIfDue } from "$lib/server/settings";
 import type { Handle } from "@sveltejs/kit";
 
 export const handle: Handle = async ({ event, resolve }) => {
@@ -11,6 +12,8 @@ export const handle: Handle = async ({ event, resolve }) => {
     }
   }
 
+  // apply auto-close logic based on settings, non-blocking side effect
+  try { await applyAutoCloseIfDue(); } catch {}
   return resolve(event);
 };
 

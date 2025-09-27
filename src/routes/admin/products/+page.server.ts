@@ -12,12 +12,13 @@ type Product = {
 	description?: string | null;
 	price: number;
 	media?: string | null;
+	visible: boolean;
 };
 
 // Load function
 export const load: PageServerLoad = async () => {
-	const allProducts: Product[] = await db.select().from(products);
-	return { products: allProducts };
+    const allProducts: Product[] = await db.select().from(products);
+    return { products: allProducts };
 };
 
 // Actions
@@ -32,6 +33,7 @@ export const actions: Actions = {
 
 		if (!name || !category || isNaN(price)) return fail(400, { error: "Missing fields" });
 
+		// Rely on DB default for 'visible'
 		await db.insert(products).values({ name, category, description, price, media });
 		return { success: true };
 	},
@@ -44,14 +46,25 @@ export const actions: Actions = {
 		const description = form.get("description")?.toString();
 		const price = parseFloat(form.get("price") as string);
 		const media = form.get("media")?.toString();
+		const visible = form.get("visible") != null ? true : undefined;
 
 		if (!id || !name || !category || isNaN(price)) return fail(400, { error: "Invalid fields" });
 
 		await db
 			.update(products)
-			.set({ name, category, description, price, media })
+			.set({ name, category, description, price, media, ...(visible !== undefined ? { visible } : {}) })
 			.where(eq(products.id, id));
 
+		return { success: true };
+	},
+
+	toggleVisible: async ({ request }) => {
+		const form = await request.formData();
+		const id = Number(form.get("id"));
+		// Checkbox: present => true, absent => false
+		const visible = form.get("visible") != null;
+		if (!id) return fail(400, { error: "Missing id" });
+		await db.update(products).set({ visible }).where(eq(products.id, id));
 		return { success: true };
 	},
 

@@ -14,6 +14,7 @@
 		description?: string | null;
 		price: number;
 		media?: string | null;
+		visible: boolean;
 	};
 
 	const resetForm = () => {
@@ -91,6 +92,9 @@
 			<input
 				name="price"
 				type="number"
+				step="0.01"
+				min="0"
+				inputmode="decimal"
 				placeholder="Price"
 				bind:value={form.price}
 				class="w-full rounded border p-2"
@@ -162,7 +166,26 @@
 					<p class="text-sm text-gray-500">{product.category}</p>
 					<p class="mt-1 text-gray-700">{product.description}</p>
 					<p class="mt-2 font-bold">${product.price.toFixed(2)}</p>
-					<div class="mt-3 flex space-x-2">
+					<div class="mt-3 flex flex-wrap items-center gap-2">
+						<form
+							method="POST"
+							action="?/toggleVisible"
+							use:enhance={() => ({ result, update }) => { if (result.type === 'success') update(); }}
+							class="inline-flex items-center gap-2"
+						>
+							<input type="hidden" name="id" value={product.id} />
+							<label class="flex items-center gap-2 text-sm">
+								<input
+									type="checkbox"
+									name="visible"
+									checked={product.visible}
+									on:change={(e) => (e.currentTarget.form as HTMLFormElement)?.requestSubmit()}
+								/>
+								<span class={product.visible ? 'text-emerald-700' : 'text-gray-500'}>
+									{product.visible ? 'Visible in catalog' : 'Hidden from catalog'}
+								</span>
+							</label>
+						</form>
 						<button
 							on:click={() => setEdit(product)}
 							class="rounded bg-yellow-400 px-2 py-1 text-sm text-white hover:bg-yellow-500"
