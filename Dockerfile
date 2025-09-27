@@ -12,6 +12,8 @@ RUN npm run build
 FROM node:22-alpine
 WORKDIR /app
 
+ENV DATABASE_URL="file:/tmp/dummy.sqlite"
+
 COPY --from=builder /app/package*.json ./
 RUN npm install --omit=dev
 
