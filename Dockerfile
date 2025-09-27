@@ -5,8 +5,11 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
+# Allow build-time database URL argument
+ARG DATABASE_URL=file:/tmp/build.db
+ENV DATABASE_URL=${DATABASE_URL}
+
 COPY . .
-ENV DATABASE_URL="file:/tmp/dummy.sqlite"
 RUN npm run build
 
 # Step 2: Run the app
