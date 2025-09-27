@@ -6,13 +6,13 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
+ENV DATABASE_URL="file:/tmp/dummy.sqlite"
 RUN npm run build
 
 # Step 2: Run the app
 FROM node:22-alpine
 WORKDIR /app
 
-ENV DATABASE_URL="file:/tmp/dummy.sqlite"
 
 COPY --from=builder /app/package*.json ./
 RUN npm install --omit=dev
