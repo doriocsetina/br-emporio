@@ -1,5 +1,5 @@
 {
-  "ordersOpen": true,
+  "ordersOpen": false,
   "autoClose": {
     "enabled": false,
     "weekday": null,
