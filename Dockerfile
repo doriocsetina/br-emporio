@@ -1,5 +1,5 @@
 # Step 1: Build the app
-FROM node:18-alpine AS builder
+FROM node:22-alpine AS builder
 WORKDIR /app
 
 COPY package*.json ./
@@ -18,7 +18,7 @@ RUN npm install --omit=dev
 COPY --from=builder /app/build ./build
 COPY --from=builder /app/.svelte-kit ./.svelte-kit
 COPY --from=builder /app/static ./static
-COPY --from=builder /app/drizzle ./drizzle   # include schema + migrations
+COPY --from=builder /app/drizzle ./drizzle
 
 EXPOSE 3000
 CMD ["node", "build"]
